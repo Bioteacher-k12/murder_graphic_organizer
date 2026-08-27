@@ -29,7 +29,29 @@
       font-size: 14px;
       outline: none;
     }
-    /* Clean up styling when printing or saving as PDF */
+    .btn-container {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-print {
+      background: #007bff;
+      color: white;
+    }
+    .btn-clear {
+      background: #dc3545;
+      color: white;
+    }
     @media print {
       .no-print {
         display: none !important;
@@ -43,12 +65,12 @@
 </head>
 <body>
 
-  <button class="no-print" onclick="window.print()" style="position: fixed; top: 15px; right: 15px; z-index: 1000; padding: 10px 16px; background: #007bff; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-    Save as PDF / Print
-  </button>
+  <div class="btn-container no-print">
+    <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-print" onclick="window.print()">Save as PDF / Print</button>
+  </div>
 
   <div id="organizer-container">
-    <!-- Update 'organizer.png' below to match your image filename in GitHub -->
     <img src="CER_Organizer_1.png" id="bg-img" alt="Graphic Organizer">
   </div>
 
@@ -57,7 +79,6 @@
     const bgImg = document.getElementById('bg-img');
 
     container.addEventListener('click', (e) => {
-      // Spawns text box only when clicking directly on the background image
       if (e.target !== bgImg) return;
 
       const rect = container.getBoundingClientRect();
@@ -70,9 +91,27 @@
       textInput.style.left = `${x}px`;
       textInput.style.top = `${y}px`;
 
+      // Auto-remove box if left empty when clicking away
+      textInput.addEventListener('blur', () => {
+        if (!textInput.innerText.trim()) {
+          textInput.remove();
+        }
+      });
+
+      // Double-click to delete any individual box
+      textInput.addEventListener('dblclick', () => {
+        textInput.remove();
+      });
+
       container.appendChild(textInput);
       textInput.focus();
     });
+
+    function clearAll() {
+      if (confirm('Are you sure you want to clear all text boxes?')) {
+        document.querySelectorAll('.text-box').forEach(box => box.remove());
+      }
+    }
   </script>
 
 </body>
