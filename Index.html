@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Graphic Organizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+    }
+    #organizer-container {
+      position: relative;
+      display: inline-block;
+    }
+    #bg-img {
+      max-width: 100%;
+      display: block;
+    }
+    .text-box {
+      position: absolute;
+      min-width: 80px;
+      min-height: 24px;
+      padding: 4px 6px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px dashed #007bff;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    /* Clean up styling when printing or saving as PDF */
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      .text-box {
+        border: none;
+        background: transparent;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="no-print" onclick="window.print()" style="position: fixed; top: 15px; right: 15px; z-index: 1000; padding: 10px 16px; background: #007bff; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
+    Save as PDF / Print
+  </button>
+
+  <div id="organizer-container">
+    <!-- Update 'organizer.png' below to match your image filename in GitHub -->
+    <img src="CER_Organizer_1" id="bg-img" alt="Graphic Organizer">
+  </div>
+
+  <script>
+    const container = document.getElementById('organizer-container');
+    const bgImg = document.getElementById('bg-img');
+
+    container.addEventListener('click', (e) => {
+      // Spawns text box only when clicking directly on the background image
+      if (e.target !== bgImg) return;
+
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const textInput = document.createElement('div');
+      textInput.className = 'text-box';
+      textInput.contentEditable = 'true';
+      textInput.style.left = `${x}px`;
+      textInput.style.top = `${y}px`;
+
+      container.appendChild(textInput);
+      textInput.focus();
+    });
+  </script>
+
+</body>
+</html>
